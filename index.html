@@ -14,7 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       flex-wrap: wrap;
     }
 
@@ -35,10 +35,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    .calculator:hover {
-      transform: translateY(-5px);
     }
 
     input {
@@ -80,10 +76,6 @@
       transform: scale(1.05);
     }
 
-    button:active {
-      transform: scale(0.95);
-    }
-
     .title {
       text-align: center;
       font-size: 24px;
@@ -100,78 +92,91 @@
     <!-- Calculator 1 -->
     <div class="calculator">
       <div class="title">Calculator 1</div>
-      <input type="text" id="display1" value="" readonly>
+      <input type="text" id="display1" readonly>
       <div class="buttons">
-        <button onclick="appendToDisplay('7','display1')">7</button>
-        <button onclick="appendToDisplay('8','display1')">8</button>
-        <button onclick="appendToDisplay('9','display1')">9</button>
-        <button onclick="appendToDisplay('/','display1')">÷</button>
+        <button onclick="append('7','display1')">7</button>
+        <button onclick="append('8','display1')">8</button>
+        <button onclick="append('9','display1')">9</button>
+        <button onclick="append('/','display1')">÷</button>
 
-        <button onclick="appendToDisplay('4','display1')">4</button>
-        <button onclick="appendToDisplay('5','display1')">5</button>
-        <button onclick="appendToDisplay('6','display1')">6</button>
-        <button onclick="appendToDisplay('*','display1')">×</button>
+        <button onclick="append('4','display1')">4</button>
+        <button onclick="append('5','display1')">5</button>
+        <button onclick="append('6','display1')">6</button>
+        <button onclick="append('*','display1')">×</button>
 
-        <button onclick="appendToDisplay('1','display1')">1</button>
-        <button onclick="appendToDisplay('2','display1')">2</button>
-        <button onclick="appendToDisplay('3','display1')">3</button>
-        <button onclick="appendToDisplay('-','display1')">-</button>
+        <button onclick="append('1','display1')">1</button>
+        <button onclick="append('2','display1')">2</button>
+        <button onclick="append('3','display1')">3</button>
+        <button onclick="append('-','display1')">-</button>
 
         <button onclick="clearDisplay('display1')">C</button>
-        <button onclick="appendToDisplay('0','display1')">0</button>
-        <button onclick="calculateDisplay('display1')">=</button>
-        <button onclick="appendToDisplay('+','display1')">+</button>
+        <button onclick="append('0','display1')">0</button>
+        <button onclick="backspace('display1')">⌫</button>
+        <button onclick="append('+','display1')">+</button>
+
+        <button style="grid-column: span 4; background:linear-gradient(145deg,#f7971e,#ffd200);" onclick="calculate('display1')">=</button>
       </div>
     </div>
 
     <!-- Calculator 2 -->
     <div class="calculator">
       <div class="title">Calculator 2</div>
-      <input type="text" id="display2" value="" readonly>
+      <input type="text" id="display2" readonly>
       <div class="buttons">
-        <button onclick="appendToDisplay('7','display2')">7</button>
-        <button onclick="appendToDisplay('8','display2')">8</button>
-        <button onclick="appendToDisplay('9','display2')">9</button>
-        <button onclick="appendToDisplay('/','display2')">÷</button>
+        <button onclick="append('7','display2')">7</button>
+        <button onclick="append('8','display2')">8</button>
+        <button onclick="append('9','display2')">9</button>
+        <button onclick="append('/','display2')">÷</button>
 
-        <button onclick="appendToDisplay('4','display2')">4</button>
-        <button onclick="appendToDisplay('5','display2')">5</button>
-        <button onclick="appendToDisplay('6','display2')">6</button>
-        <button onclick="appendToDisplay('*','display2')">×</button>
+        <button onclick="append('4','display2')">4</button>
+        <button onclick="append('5','display2')">5</button>
+        <button onclick="append('6','display2')">6</button>
+        <button onclick="append('*','display2')">×</button>
 
-        <button onclick="appendToDisplay('1','display2')">1</button>
-        <button onclick="appendToDisplay('2','display2')">2</button>
-        <button onclick="appendToDisplay('3','display2')">3</button>
-        <button onclick="appendToDisplay('-','display2')">-</button>
+        <button onclick="append('1','display2')">1</button>
+        <button onclick="append('2','display2')">2</button>
+        <button onclick="append('3','display2')">3</button>
+        <button onclick="append('-','display2')">-</button>
 
         <button onclick="clearDisplay('display2')">C</button>
-        <button onclick="appendToDisplay('0','display2')">0</button>
-        <button onclick="calculateDisplay('display2')">=</button>
-        <button onclick="appendToDisplay('+','display2')">+</button>
+        <button onclick="append('0','display2')">0</button>
+        <button onclick="backspace('display2')">⌫</button>
+        <button onclick="append('+','display2')">+</button>
+
+        <button style="grid-column: span 4; background:linear-gradient(145deg,#f7971e,#ffd200);" onclick="calculate('display2')">=</button>
       </div>
     </div>
   </div>
 
   <script>
-    function appendToDisplay(value, displayId) {
-      const display = document.getElementById(displayId);
-      display.value += value;
+    function append(value, id) {
+      const d = document.getElementById(id);
+      d.value += value;
     }
 
-    function clearDisplay(displayId) {
-      document.getElementById(displayId).value = "";
+    function clearDisplay(id) {
+      document.getElementById(id).value = "";
     }
 
-    function calculateDisplay(displayId) {
-      const display = document.getElementById(displayId);
+    function backspace(id) {
+      const d = document.getElementById(id);
+      d.value = d.value.slice(0, -1);
+    }
+
+    function calculate(id) {
+      const d = document.getElementById(id);
       try {
-        let result = eval(display.value);
-        // Fix decimal issues and show max 10 decimal points
-        display.value = parseFloat(result.toFixed(10));
+        let result = Function('"use strict";return (' + d.value + ')')();
+        // Handle decimal precision correctly
+        if (Number.isFinite(result)) {
+          d.value = parseFloat(result.toPrecision(12)).toString();
+        } else {
+          d.value = "Error";
+        }
       } catch {
-        display.value = "Error";
+        d.value = "Error";
       }
     }
   </script>
 </body>
-          </html>
+  </html>
