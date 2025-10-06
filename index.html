@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Double Calculator - Masud Rana</title>
+  <title>Offline Double Calculator</title>
   <style>
     body {
       margin: 0;
@@ -165,11 +165,13 @@
     function calculateDisplay(displayId) {
       const display = document.getElementById(displayId);
       try {
-        display.value = eval(display.value);
-      } catch (e) {
+        let result = eval(display.value);
+        // Fix decimal issues and show max 10 decimal points
+        display.value = parseFloat(result.toFixed(10));
+      } catch {
         display.value = "Error";
       }
     }
   </script>
 </body>
-  </html>
+          </html>
